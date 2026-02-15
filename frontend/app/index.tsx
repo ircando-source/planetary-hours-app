@@ -464,9 +464,44 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   hourLabel: {
-    fontSize: 16,
+    fontSize: 14,
+    marginTop: 4,
+    letterSpacing: 1,
+  },
+  vibrationText: {
+    fontSize: 20,
+    fontWeight: '600',
     marginTop: 8,
     letterSpacing: 1,
+    fontStyle: 'italic',
+  },
+  vibrationCard: {
+    marginTop: 20,
+    borderRadius: 16,
+    padding: 16,
+    marginHorizontal: 10,
+    width: '100%',
+  },
+  vibrationDescription: {
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  keywordsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  keywordBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  keywordText: {
+    fontSize: 12,
+    fontWeight: '600',
   },
   timerSection: {
     paddingBottom: 20,
