@@ -11,42 +11,63 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
-// Planet configuration with colors and symbols
+// Planet configuration with colors, symbols, and vibrations
 const PLANETS = {
   saturn: {
     name: 'Saturn',
     color: '#4B0082', // Indigo
     symbol: 'planet-outline',
+    vibration: 'Discipline & Structure',
+    description: 'Time for focus, boundaries, karma work, meditation, and long-term planning. Ideal for serious commitments and spiritual discipline.',
+    keywords: ['Responsibility', 'Patience', 'Wisdom', 'Limitation', 'Karma'],
   },
   jupiter: {
     name: 'Jupiter',
     color: '#1E3A5F', // Blue marine (navy blue)
     symbol: 'planet-outline',
+    vibration: 'Expansion & Abundance',
+    description: 'Time for growth, opportunities, luck, and prosperity. Ideal for business ventures, education, travel, and spiritual expansion.',
+    keywords: ['Luck', 'Prosperity', 'Growth', 'Optimism', 'Wisdom'],
   },
   mars: {
     name: 'Mars',
     color: '#DC143C', // Red
     symbol: 'flame-outline',
+    vibration: 'Energy & Action',
+    description: 'Time for courage, physical activity, competition, and assertiveness. Ideal for starting projects, workouts, and overcoming obstacles.',
+    keywords: ['Courage', 'Strength', 'Passion', 'Drive', 'Willpower'],
   },
   sun: {
     name: 'Sun',
     color: '#FF8C00', // Orange
     symbol: 'sunny-outline',
+    vibration: 'Vitality & Success',
+    description: 'Time for leadership, creativity, self-expression, and recognition. Ideal for important meetings, creative work, and personal power.',
+    keywords: ['Leadership', 'Creativity', 'Joy', 'Confidence', 'Fame'],
   },
   venus: {
     name: 'Venus',
     color: '#FFD700', // Yellow
     symbol: 'heart-outline',
+    vibration: 'Love & Harmony',
+    description: 'Time for relationships, beauty, art, and pleasure. Ideal for romance, socializing, artistic pursuits, and self-care.',
+    keywords: ['Love', 'Beauty', 'Pleasure', 'Art', 'Harmony'],
   },
   mercury: {
     name: 'Mercury',
     color: '#8A2BE2', // Violet
     symbol: 'flash-outline',
+    vibration: 'Communication & Intellect',
+    description: 'Time for thinking, writing, speaking, and learning. Ideal for negotiations, studies, messages, and intellectual pursuits.',
+    keywords: ['Communication', 'Learning', 'Travel', 'Logic', 'Adaptability'],
   },
   moon: {
     name: 'Moon',
     color: '#228B22', // Green
     symbol: 'moon-outline',
+    vibration: 'Intuition & Emotion',
+    description: 'Time for introspection, dreams, psychic work, and nurturing. Ideal for emotional healing, family matters, and connecting with intuition.',
+    keywords: ['Intuition', 'Dreams', 'Emotions', 'Nurturing', 'Cycles'],
   },
 };
 
