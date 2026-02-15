@@ -274,15 +274,20 @@ export default function PlanetaryHoursApp() {
         backgroundColor={currentPlanetData.color}
       />
       <SafeAreaView style={styles.safeArea}>
-        <Animated.View 
-          style={[
-            styles.content,
-            { 
-              opacity: fadeAnim,
-              transform: [{ scale: scaleAnim }],
-            }
-          ]}
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
+          <Animated.View 
+            style={[
+              styles.content,
+              { 
+                opacity: fadeAnim,
+                transform: [{ scale: scaleAnim }],
+              }
+            ]}
+          >
           {/* Header */}
           <View style={styles.header}>
             <Text style={[styles.timeText, { color: subTextColor }]}>
