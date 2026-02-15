@@ -406,6 +406,7 @@ export default function PlanetaryHoursApp() {
             </View>
           </View>
         </Animated.View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -417,6 +418,12 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,
