@@ -438,13 +438,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconContainer: {
-    width: 180,
-    height: 180,
-    borderRadius: 90,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
     backgroundColor: 'rgba(255,255,255,0.15)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     }),
   },
   planetName: {
-    fontSize: 48,
+    fontSize: 40,
     fontWeight: '800',
     letterSpacing: 2,
     textTransform: 'uppercase',
