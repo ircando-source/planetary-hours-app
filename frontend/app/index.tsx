@@ -297,7 +297,7 @@ export default function PlanetaryHoursApp() {
             <View style={styles.iconContainer}>
               <Ionicons 
                 name={currentPlanetData.symbol as any} 
-                size={120} 
+                size={100} 
                 color={textColor} 
               />
             </View>
@@ -306,9 +306,35 @@ export default function PlanetaryHoursApp() {
               {currentPlanetData.name}
             </Text>
             
+            <Text style={[styles.vibrationText, { color: textColor }]}>
+              {currentPlanetData.vibration}
+            </Text>
+            
             <Text style={[styles.hourLabel, { color: subTextColor }]}>
               Planetary Hour {planetaryHour.hourNumber} of {planetaryHour.isDay ? 'Day' : 'Night'}
             </Text>
+
+            {/* Vibration Description Card */}
+            <View style={[styles.vibrationCard, { backgroundColor: isLightBackground ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }]}>
+              <Text style={[styles.vibrationDescription, { color: subTextColor }]}>
+                {currentPlanetData.description}
+              </Text>
+              <View style={styles.keywordsContainer}>
+                {currentPlanetData.keywords.map((keyword, index) => (
+                  <View 
+                    key={index} 
+                    style={[
+                      styles.keywordBadge, 
+                      { backgroundColor: isLightBackground ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.2)' }
+                    ]}
+                  >
+                    <Text style={[styles.keywordText, { color: textColor }]}>
+                      {keyword}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </View>
           </View>
 
           {/* Timer Section */}
