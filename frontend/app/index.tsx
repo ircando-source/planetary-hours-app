@@ -1153,6 +1153,7 @@ const PlanetaryHoursScreen = ({
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [prevPlanet, setPrevPlanet] = useState(planetaryHour.currentPlanet);
+  const [showDailyHours, setShowDailyHours] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
