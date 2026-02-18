@@ -955,6 +955,7 @@ const mainStyles = StyleSheet.create({
       android: { elevation: 12 },
     }),
   },
+  astroSymbol: { fontSize: 80, fontWeight: '300' },
   planetName: { fontSize: 40, fontWeight: '800', letterSpacing: 2, textTransform: 'uppercase' },
   vibrationText: { fontSize: 20, fontWeight: '600', marginTop: 8, letterSpacing: 1, fontStyle: 'italic' },
   hourLabel: { fontSize: 14, marginTop: 4, letterSpacing: 1 },
@@ -970,13 +971,13 @@ const mainStyles = StyleSheet.create({
   nextPlanetRow: { flexDirection: 'row', alignItems: 'center', marginTop: 16 },
   nextLabel: { fontSize: 14, marginRight: 8 },
   nextPlanetBadge: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 16, gap: 6 },
+  nextPlanetSymbol: { color: '#fff', fontSize: 18 },
   nextPlanetName: { color: '#fff', fontWeight: '600', fontSize: 14 },
   legendSection: { paddingBottom: 20 },
   legendRow: { flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap', gap: 8 },
   legendItem: { alignItems: 'center', paddingVertical: 8, paddingHorizontal: 8, borderRadius: 12, minWidth: 44 },
   legendItemActive: { backgroundColor: 'rgba(255,255,255,0.2)' },
-  legendDot: { width: 12, height: 12, borderRadius: 6, marginBottom: 4, borderWidth: 1, borderColor: 'rgba(255,255,255,0.3)' },
-  legendDotActive: { width: 16, height: 16, borderRadius: 8, borderWidth: 2, borderColor: '#fff' },
+  legendSymbol: { fontSize: 20, marginBottom: 2 },
   legendText: { fontSize: 10, fontWeight: '500', textTransform: 'uppercase' },
 });
 
