@@ -35,7 +35,7 @@ const PLANETS = {
   saturn: {
     name: 'Saturn',
     color: '#4B0082',
-    symbol: 'planet-outline',
+    symbol: '♄',
     vibration: 'Discipline & Structure',
     description: 'Time for focus, boundaries, karma work, meditation, and long-term planning. Ideal for serious commitments and spiritual discipline.',
     keywords: ['Responsibility', 'Patience', 'Wisdom', 'Limitation', 'Karma'],
@@ -43,7 +43,7 @@ const PLANETS = {
   jupiter: {
     name: 'Jupiter',
     color: '#1E3A5F',
-    symbol: 'planet-outline',
+    symbol: '♃',
     vibration: 'Expansion & Abundance',
     description: 'Time for growth, opportunities, luck, and prosperity. Ideal for business ventures, education, travel, and spiritual expansion.',
     keywords: ['Luck', 'Prosperity', 'Growth', 'Optimism', 'Wisdom'],
@@ -51,7 +51,7 @@ const PLANETS = {
   mars: {
     name: 'Mars',
     color: '#DC143C',
-    symbol: 'flame-outline',
+    symbol: '♂',
     vibration: 'Energy & Action',
     description: 'Time for courage, physical activity, competition, and assertiveness. Ideal for starting projects, workouts, and overcoming obstacles.',
     keywords: ['Courage', 'Strength', 'Passion', 'Drive', 'Willpower'],
@@ -59,7 +59,7 @@ const PLANETS = {
   sun: {
     name: 'Sun',
     color: '#FF8C00',
-    symbol: 'sunny-outline',
+    symbol: '☉',
     vibration: 'Vitality & Success',
     description: 'Time for leadership, creativity, self-expression, and recognition. Ideal for important meetings, creative work, and personal power.',
     keywords: ['Leadership', 'Creativity', 'Joy', 'Confidence', 'Fame'],
@@ -67,7 +67,7 @@ const PLANETS = {
   venus: {
     name: 'Venus',
     color: '#FFD700',
-    symbol: 'heart-outline',
+    symbol: '♀',
     vibration: 'Love & Harmony',
     description: 'Time for relationships, beauty, art, and pleasure. Ideal for romance, socializing, artistic pursuits, and self-care.',
     keywords: ['Love', 'Beauty', 'Pleasure', 'Art', 'Harmony'],
@@ -75,7 +75,7 @@ const PLANETS = {
   mercury: {
     name: 'Mercury',
     color: '#8A2BE2',
-    symbol: 'flash-outline',
+    symbol: '☿',
     vibration: 'Communication & Intellect',
     description: 'Time for thinking, writing, speaking, and learning. Ideal for negotiations, studies, messages, and intellectual pursuits.',
     keywords: ['Communication', 'Learning', 'Travel', 'Logic', 'Adaptability'],
@@ -83,7 +83,7 @@ const PLANETS = {
   moon: {
     name: 'Moon',
     color: '#228B22',
-    symbol: 'moon-outline',
+    symbol: '☽',
     vibration: 'Intuition & Emotion',
     description: 'Time for introspection, dreams, psychic work, and nurturing. Ideal for emotional healing, family matters, and connecting with intuition.',
     keywords: ['Intuition', 'Dreams', 'Emotions', 'Nurturing', 'Cycles'],
