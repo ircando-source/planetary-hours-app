@@ -261,61 +261,94 @@ const calculateSunTimes = (date: Date, latitude: number, longitude: number) => {
   return { sunrise, sunset };
 };
 
-// Calculate planetary hour
+// Calculate planetary hour - Algoritm precis bazat pe răsărit și apus
+// Implementare conform codului Python: get_calcul_astral_precis
 const calculatePlanetaryHour = (location: LocationData) => {
   const now = new Date();
-  const dayOfWeek = now.getDay();
-  const { sunrise, sunset } = calculateSunTimes(now, location.latitude, location.longitude);
   
-  const isDay = now >= sunrise && now < sunset;
-  const dayLengthMs = sunset.getTime() - sunrise.getTime();
-  const nightLengthMs = 24 * 60 * 60 * 1000 - dayLengthMs;
-  const dayHourLength = dayLengthMs / 12;
-  const nightHourLength = nightLengthMs / 12;
+  // Obține răsăritul și apusul pentru azi
+  const todaySun = calculateSunTimes(now, location.latitude, location.longitude);
+  const rasarit = todaySun.sunrise;
+  const apus = todaySun.sunset;
   
-  const dayRuler = DAY_RULERS[dayOfWeek];
-  const startIndex = PLANETARY_SEQUENCE.indexOf(dayRuler);
+  let durata: number;       // Durata unei ore planetare în ms
+  let idx: number;          // Indexul orei curente (0-11)
+  let prox: Date;           // Timpul următoarei schimbări
+  let zi_ast: number;       // Ziua săptămânii pentru calcul
+  let este_zi: boolean;     // Dacă e zi sau noapte
   
-  let hourIndex: number;
-  let hourNumber: number;
-  let nextHourTime: Date;
-  
-  if (isDay) {
-    const msSinceSunrise = now.getTime() - sunrise.getTime();
-    hourNumber = Math.floor(msSinceSunrise / dayHourLength) + 1;
-    hourIndex = (startIndex + hourNumber - 1) % 7;
-    nextHourTime = new Date(sunrise.getTime() + hourNumber * dayHourLength);
-    if (hourNumber > 12) { hourNumber = 12; nextHourTime = sunset; }
+  if (now >= rasarit && now < apus) {
+    // ZIUA: între răsărit și apus
+    este_zi = true;
+    durata = (apus.getTime() - rasarit.getTime()) / 12;
+    idx = Math.floor((now.getTime() - rasarit.getTime()) / durata);
+    idx = Math.min(idx, 11); // Limitează la max 11
+    prox = new Date(rasarit.getTime() + durata * (idx + 1));
+    zi_ast = now.getDay();
   } else {
-    let nightStart: Date;
-    let effectiveDayOfWeek = dayOfWeek;
+    // NOAPTEA
+    este_zi = false;
     
-    if (now < sunrise) {
+    if (now >= apus) {
+      // După apus - calculăm până la răsăritul de mâine
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowSun = calculateSunTimes(tomorrow, location.latitude, location.longitude);
+      
+      durata = (tomorrowSun.sunrise.getTime() - apus.getTime()) / 12;
+      idx = Math.floor((now.getTime() - apus.getTime()) / durata);
+      idx = Math.min(idx, 11);
+      prox = new Date(apus.getTime() + durata * (idx + 1));
+      zi_ast = now.getDay();
+    } else {
+      // Înainte de răsărit - calculăm de la apusul de ieri
       const yesterday = new Date(now);
       yesterday.setDate(yesterday.getDate() - 1);
-      const { sunset: yesterdaySunset } = calculateSunTimes(yesterday, location.latitude, location.longitude);
-      nightStart = yesterdaySunset;
-      effectiveDayOfWeek = (dayOfWeek + 6) % 7;
-    } else {
-      nightStart = sunset;
+      const yesterdaySun = calculateSunTimes(yesterday, location.latitude, location.longitude);
+      
+      durata = (rasarit.getTime() - yesterdaySun.sunset.getTime()) / 12;
+      idx = Math.floor((now.getTime() - yesterdaySun.sunset.getTime()) / durata);
+      idx = Math.min(idx, 11);
+      prox = new Date(yesterdaySun.sunset.getTime() + durata * (idx + 1));
+      zi_ast = yesterday.getDay();
     }
-    
-    const dayRulerForNight = DAY_RULERS[effectiveDayOfWeek];
-    const nightStartIndex = PLANETARY_SEQUENCE.indexOf(dayRulerForNight);
-    const msSinceNightStart = now.getTime() - nightStart.getTime();
-    hourNumber = Math.floor(msSinceNightStart / nightHourLength) + 1;
-    hourIndex = (nightStartIndex + 12 + hourNumber - 1) % 7;
-    nextHourTime = new Date(nightStart.getTime() + hourNumber * nightHourLength);
-    if (hourNumber > 12) { hourNumber = 12; nextHourTime = sunrise; }
   }
   
-  const currentPlanet = PLANETARY_SEQUENCE[hourIndex];
-  const nextPlanet = PLANETARY_SEQUENCE[(hourIndex + 1) % 7];
+  // Planetele care guvernează prima oră a fiecărei zile
+  // Duminică=0:Soare, Luni=1:Luna, Marți=2:Marte, etc.
+  const PLANET_ZI: { [key: number]: string } = {
+    0: 'sun',      // Duminică - Soare
+    1: 'moon',     // Luni - Luna
+    2: 'mars',     // Marți - Marte
+    3: 'mercury',  // Miercuri - Mercur
+    4: 'jupiter',  // Joi - Jupiter
+    5: 'venus',    // Vineri - Venus
+    6: 'saturn',   // Sâmbătă - Saturn
+  };
+  
+  // Ordinea planetară (secvența Chaldeană)
+  const ORDINE_PLANETE = ['saturn', 'jupiter', 'mars', 'sun', 'venus', 'mercury', 'moon'];
+  
+  // Calculează indexul final al planetei
+  const planetaZilei = PLANET_ZI[zi_ast];
+  const startIdx = ORDINE_PLANETE.indexOf(planetaZilei);
+  const offsetNoapte = este_zi ? 0 : 12;
+  const idx_final = (startIdx + idx + offsetNoapte) % 7;
+  
+  const currentPlanet = ORDINE_PLANETE[idx_final];
+  const nextPlanet = ORDINE_PLANETE[(idx_final + 1) % 7];
+  const hourNumber = idx + 1;
   
   return {
-    currentPlanet, nextPlanet, hourNumber, isDay, nextHourTime,
-    timeUntilNext: nextHourTime.getTime() - now.getTime(),
-    sunrise, sunset,
+    currentPlanet,
+    nextPlanet,
+    hourNumber,
+    isDay: este_zi,
+    nextHourTime: prox,
+    timeUntilNext: prox.getTime() - now.getTime(),
+    sunrise: rasarit,
+    sunset: apus,
+    hourDuration: durata, // Durata orei planetare în ms
   };
 };
 
