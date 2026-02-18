@@ -870,7 +870,7 @@ const PlanetaryHoursScreen = ({
             {/* Main Planet Display */}
             <View style={mainStyles.mainContent}>
               <View style={mainStyles.iconContainer}>
-                <Ionicons name={currentPlanetData.symbol as any} size={100} color={textColor} />
+                <Text style={[mainStyles.astroSymbol, { color: textColor }]}>{currentPlanetData.symbol}</Text>
               </View>
               
               <Text style={[mainStyles.planetName, { color: textColor }]}>{currentPlanetData.name}</Text>
@@ -899,7 +899,7 @@ const PlanetaryHoursScreen = ({
                 <View style={mainStyles.nextPlanetRow}>
                   <Text style={[mainStyles.nextLabel, { color: subTextColor }]}>Next:</Text>
                   <View style={[mainStyles.nextPlanetBadge, { backgroundColor: nextPlanetData.color }]}>
-                    <Ionicons name={nextPlanetData.symbol as any} size={16} color="#fff" />
+                    <Text style={mainStyles.nextPlanetSymbol}>{nextPlanetData.symbol}</Text>
                     <Text style={mainStyles.nextPlanetName}>{nextPlanetData.name}</Text>
                   </View>
                 </View>
@@ -914,7 +914,9 @@ const PlanetaryHoursScreen = ({
                   const isActive = planet === planetaryHour.currentPlanet;
                   return (
                     <View key={planet} style={[mainStyles.legendItem, isActive && mainStyles.legendItemActive]}>
-                      <View style={[mainStyles.legendDot, { backgroundColor: planetData.color }, isActive && mainStyles.legendDotActive]} />
+                      <Text style={[mainStyles.legendSymbol, { color: isActive ? textColor : subTextColor }]}>
+                        {planetData.symbol}
+                      </Text>
                       <Text style={[mainStyles.legendText, { color: subTextColor }, isActive && { color: textColor, fontWeight: '700' }]}>
                         {planetData.name.substring(0, 3)}
                       </Text>
