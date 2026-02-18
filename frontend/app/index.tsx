@@ -254,10 +254,6 @@ const calculateSunTimes = (date: Date, latitude: number, longitude: number) => {
   sunset.setHours(0, 0, 0, 0);
   sunset.setMinutes(Math.round(sunsetMinutes));
   
-  const sunset = new Date(date);
-  sunset.setHours(0, 0, 0, 0);
-  sunset.setMinutes(Math.round(sunsetMinutes));
-  
   return { sunrise, sunset };
 };
 
