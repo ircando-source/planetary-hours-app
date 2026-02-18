@@ -358,6 +358,356 @@ const formatTimeRemaining = (ms: number) => {
 
 const formatTime = (date: Date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 const formatSunTime = (date: Date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+const formatHourTime = (date: Date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+// Casele cerului (în ordine inversă, de la 12 la 1)
+const getCasaCerului = (hourIndex: number, isDay: boolean): string => {
+  // Fiecare casă cuprinde 2 ore planetare
+  // Ziua: ore 1-2 = Casa XII, ore 3-4 = Casa XI, etc.
+  // Noaptea: ore 1-2 = Casa VI, ore 3-4 = Casa V, etc.
+  const caseRomane = ['XII', 'XI', 'X', 'IX', 'VIII', 'VII', 'VI', 'V', 'IV', 'III', 'II', 'I'];
+  const casaIndex = Math.floor((hourIndex - 1) / 2) + (isDay ? 0 : 6);
+  return caseRomane[casaIndex] || 'I';
+};
+
+// Generează toate orele planetare ale zilei
+const generateDailyPlanetaryHours = (location: LocationData) => {
+  const now = new Date();
+  const todaySun = calculateSunTimes(now, location.latitude, location.longitude);
+  const tomorrowDate = new Date(now);
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  const tomorrowSun = calculateSunTimes(tomorrowDate, location.latitude, location.longitude);
+  
+  const rasarit = todaySun.sunrise;
+  const apus = todaySun.sunset;
+  const rasaritMaine = tomorrowSun.sunrise;
+  
+  const durataZi = (apus.getTime() - rasarit.getTime()) / 12;
+  const durataNoapte = (rasaritMaine.getTime() - apus.getTime()) / 12;
+  
+  const zi_ast = now.getDay();
+  
+  // Planetele care guvernează prima oră a fiecărei zile
+  const PLANET_ZI: { [key: number]: string } = {
+    0: 'sun', 1: 'moon', 2: 'mars', 3: 'mercury', 4: 'jupiter', 5: 'venus', 6: 'saturn',
+  };
+  
+  const ORDINE_PLANETE = ['saturn', 'jupiter', 'mars', 'sun', 'venus', 'mercury', 'moon'];
+  const planetaZilei = PLANET_ZI[zi_ast];
+  const startIdx = ORDINE_PLANETE.indexOf(planetaZilei);
+  
+  const hours: Array<{
+    hourNumber: number;
+    isDay: boolean;
+    planet: string;
+    symbol: string;
+    startTime: Date;
+    endTime: Date;
+    casa: string;
+  }> = [];
+  
+  // Orele de zi (1-12)
+  for (let i = 0; i < 12; i++) {
+    const planetIdx = (startIdx + i) % 7;
+    const planet = ORDINE_PLANETE[planetIdx];
+    const startTime = new Date(rasarit.getTime() + i * durataZi);
+    const endTime = new Date(rasarit.getTime() + (i + 1) * durataZi);
+    
+    hours.push({
+      hourNumber: i + 1,
+      isDay: true,
+      planet,
+      symbol: PLANETS[planet as keyof typeof PLANETS].symbol,
+      startTime,
+      endTime,
+      casa: getCasaCerului(i + 1, true),
+    });
+  }
+  
+  // Orele de noapte (1-12)
+  for (let i = 0; i < 12; i++) {
+    const planetIdx = (startIdx + 12 + i) % 7;
+    const planet = ORDINE_PLANETE[planetIdx];
+    const startTime = new Date(apus.getTime() + i * durataNoapte);
+    const endTime = new Date(apus.getTime() + (i + 1) * durataNoapte);
+    
+    hours.push({
+      hourNumber: i + 1,
+      isDay: false,
+      planet,
+      symbol: PLANETS[planet as keyof typeof PLANETS].symbol,
+      startTime,
+      endTime,
+      casa: getCasaCerului(i + 1, false),
+    });
+  }
+  
+  return {
+    hours,
+    sunrise: rasarit,
+    sunset: apus,
+    nextSunrise: rasaritMaine,
+    dayHourDuration: durataZi,
+    nightHourDuration: durataNoapte,
+  };
+};
+
+// ============ DAILY HOURS MODAL ============
+const DailyHoursModal = ({
+  visible,
+  onClose,
+  location,
+}: {
+  visible: boolean;
+  onClose: () => void;
+  location: LocationData;
+}) => {
+  const dailyData = generateDailyPlanetaryHours(location);
+  const now = new Date();
+  
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={false}
+      onRequestClose={onClose}
+    >
+      <View style={dailyStyles.container}>
+        <SafeAreaView style={dailyStyles.safeArea}>
+          {/* Header */}
+          <View style={dailyStyles.header}>
+            <TouchableOpacity onPress={onClose} style={dailyStyles.closeButton}>
+              <Ionicons name="close" size={28} color="#fff" />
+            </TouchableOpacity>
+            <Text style={dailyStyles.title}>Orele Planetare</Text>
+            <View style={{ width: 28 }} />
+          </View>
+          
+          {/* Sun Times */}
+          <View style={dailyStyles.sunTimesContainer}>
+            <View style={dailyStyles.sunTimeBox}>
+              <Text style={dailyStyles.sunTimeLabel}>☉ Răsărit</Text>
+              <Text style={dailyStyles.sunTimeValue}>{formatHourTime(dailyData.sunrise)}</Text>
+            </View>
+            <View style={dailyStyles.sunTimeBox}>
+              <Text style={dailyStyles.sunTimeLabel}>☽ Apus</Text>
+              <Text style={dailyStyles.sunTimeValue}>{formatHourTime(dailyData.sunset)}</Text>
+            </View>
+            <View style={dailyStyles.sunTimeBox}>
+              <Text style={dailyStyles.sunTimeLabel}>☉ Răsărit+</Text>
+              <Text style={dailyStyles.sunTimeValue}>{formatHourTime(dailyData.nextSunrise)}</Text>
+            </View>
+          </View>
+          
+          <ScrollView style={dailyStyles.scrollView}>
+            {/* Day Hours Section */}
+            <View style={dailyStyles.sectionHeader}>
+              <Ionicons name="sunny" size={20} color="#FFD700" />
+              <Text style={dailyStyles.sectionTitle}>Ore de Zi</Text>
+            </View>
+            
+            {dailyData.hours.filter(h => h.isDay).map((hour, index) => {
+              const isCurrentHour = now >= hour.startTime && now < hour.endTime;
+              const planetData = PLANETS[hour.planet as keyof typeof PLANETS];
+              
+              return (
+                <View 
+                  key={`day-${index}`} 
+                  style={[
+                    dailyStyles.hourRow,
+                    isCurrentHour && { backgroundColor: planetData.color, borderRadius: 12 }
+                  ]}
+                >
+                  <View style={dailyStyles.hourNumberContainer}>
+                    <Text style={[dailyStyles.hourNumber, isCurrentHour && { color: '#fff' }]}>
+                      {hour.hourNumber}
+                    </Text>
+                  </View>
+                  <View style={[dailyStyles.symbolContainer, { backgroundColor: isCurrentHour ? 'rgba(255,255,255,0.2)' : planetData.color }]}>
+                    <Text style={dailyStyles.symbolText}>{hour.symbol}</Text>
+                  </View>
+                  <View style={dailyStyles.planetInfo}>
+                    <Text style={[dailyStyles.planetName, isCurrentHour && { color: '#fff' }]}>
+                      {planetData.name}
+                    </Text>
+                    <Text style={[dailyStyles.timeRange, isCurrentHour && { color: 'rgba(255,255,255,0.8)' }]}>
+                      {formatHourTime(hour.startTime)} - {formatHourTime(hour.endTime)}
+                    </Text>
+                  </View>
+                  <View style={dailyStyles.casaContainer}>
+                    <Text style={[dailyStyles.casaLabel, isCurrentHour && { color: 'rgba(255,255,255,0.7)' }]}>Casa</Text>
+                    <Text style={[dailyStyles.casaValue, isCurrentHour && { color: '#fff' }]}>{hour.casa}</Text>
+                  </View>
+                </View>
+              );
+            })}
+            
+            {/* Night Hours Section */}
+            <View style={[dailyStyles.sectionHeader, { marginTop: 20 }]}>
+              <Ionicons name="moon" size={20} color="#8B9DC3" />
+              <Text style={dailyStyles.sectionTitle}>Ore de Noapte</Text>
+            </View>
+            
+            {dailyData.hours.filter(h => !h.isDay).map((hour, index) => {
+              const isCurrentHour = now >= hour.startTime && now < hour.endTime;
+              const planetData = PLANETS[hour.planet as keyof typeof PLANETS];
+              
+              return (
+                <View 
+                  key={`night-${index}`} 
+                  style={[
+                    dailyStyles.hourRow,
+                    isCurrentHour && { backgroundColor: planetData.color, borderRadius: 12 }
+                  ]}
+                >
+                  <View style={dailyStyles.hourNumberContainer}>
+                    <Text style={[dailyStyles.hourNumber, isCurrentHour && { color: '#fff' }]}>
+                      {hour.hourNumber}
+                    </Text>
+                  </View>
+                  <View style={[dailyStyles.symbolContainer, { backgroundColor: isCurrentHour ? 'rgba(255,255,255,0.2)' : planetData.color }]}>
+                    <Text style={dailyStyles.symbolText}>{hour.symbol}</Text>
+                  </View>
+                  <View style={dailyStyles.planetInfo}>
+                    <Text style={[dailyStyles.planetName, isCurrentHour && { color: '#fff' }]}>
+                      {planetData.name}
+                    </Text>
+                    <Text style={[dailyStyles.timeRange, isCurrentHour && { color: 'rgba(255,255,255,0.8)' }]}>
+                      {formatHourTime(hour.startTime)} - {formatHourTime(hour.endTime)}
+                    </Text>
+                  </View>
+                  <View style={dailyStyles.casaContainer}>
+                    <Text style={[dailyStyles.casaLabel, isCurrentHour && { color: 'rgba(255,255,255,0.7)' }]}>Casa</Text>
+                    <Text style={[dailyStyles.casaValue, isCurrentHour && { color: '#fff' }]}>{hour.casa}</Text>
+                  </View>
+                </View>
+              );
+            })}
+            
+            <View style={{ height: 30 }} />
+          </ScrollView>
+        </SafeAreaView>
+      </View>
+    </Modal>
+  );
+};
+
+const dailyStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#1a1a2e',
+  },
+  safeArea: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
+  closeButton: {
+    padding: 4,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  sunTimesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 16,
+    paddingHorizontal: 10,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+  },
+  sunTimeBox: {
+    alignItems: 'center',
+  },
+  sunTimeLabel: {
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 4,
+  },
+  sunTimeValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFD700',
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 12,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    gap: 8,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  hourRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    marginBottom: 4,
+  },
+  hourNumberContainer: {
+    width: 28,
+    alignItems: 'center',
+  },
+  hourNumber: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#888',
+  },
+  symbolContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 8,
+  },
+  symbolText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  planetInfo: {
+    flex: 1,
+  },
+  planetName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  timeRange: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 2,
+  },
+  casaContainer: {
+    alignItems: 'center',
+    minWidth: 50,
+  },
+  casaLabel: {
+    fontSize: 10,
+    color: '#666',
+  },
+  casaValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFD700',
+  },
+});
 
 // ============ LOCATION MENU MODAL ============
 const LocationMenuModal = ({ 
