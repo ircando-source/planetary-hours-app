@@ -1193,12 +1193,23 @@ const PlanetaryHoursScreen = ({
         <ScrollView style={mainStyles.scrollView} contentContainerStyle={mainStyles.scrollContent} showsVerticalScrollIndicator={false}>
           <Animated.View style={[mainStyles.content, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
             
-            {/* Location Header - Tap to open menu */}
-            <TouchableOpacity style={mainStyles.locationHeader} onPress={onOpenLocationMenu}>
-              <Ionicons name="location" size={16} color={subTextColor} />
-              <Text style={[mainStyles.locationText, { color: subTextColor }]}>{location.name}</Text>
-              <Ionicons name="chevron-down" size={16} color={subTextColor} />
-            </TouchableOpacity>
+            {/* Top Bar with Daily Hours Button and Location */}
+            <View style={mainStyles.topBar}>
+              <TouchableOpacity 
+                style={[mainStyles.dailyHoursButton, { backgroundColor: isLightBackground ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.15)' }]}
+                onPress={() => setShowDailyHours(true)}
+              >
+                <Ionicons name="list-outline" size={22} color={textColor} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={mainStyles.locationHeader} onPress={onOpenLocationMenu}>
+                <Ionicons name="location" size={16} color={subTextColor} />
+                <Text style={[mainStyles.locationText, { color: subTextColor }]}>{location.name}</Text>
+                <Ionicons name="chevron-down" size={16} color={subTextColor} />
+              </TouchableOpacity>
+              
+              <View style={{ width: 44 }} />
+            </View>
 
             {/* Time Header */}
             <View style={mainStyles.header}>
