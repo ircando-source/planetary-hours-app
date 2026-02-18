@@ -1290,6 +1290,13 @@ const PlanetaryHoursScreen = ({
           </Animated.View>
         </ScrollView>
       </SafeAreaView>
+      
+      {/* Daily Hours Modal */}
+      <DailyHoursModal
+        visible={showDailyHours}
+        onClose={() => setShowDailyHours(false)}
+        location={location}
+      />
     </View>
   );
 };
@@ -1300,7 +1307,20 @@ const mainStyles = StyleSheet.create({
   scrollView: { flex: 1 },
   scrollContent: { flexGrow: 1 },
   content: { flex: 1, paddingHorizontal: 20 },
-  locationHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 10, gap: 6 },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+  },
+  dailyHoursButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  locationHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 },
   locationText: { fontSize: 14, fontWeight: '600' },
   header: { alignItems: 'center', paddingTop: 10, paddingBottom: 10 },
   timeText: { fontSize: 18, fontWeight: '600', letterSpacing: 1 },
