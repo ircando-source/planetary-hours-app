@@ -96,27 +96,163 @@ const DAY_RULERS: { [key: number]: string } = {
   0: 'sun', 1: 'moon', 2: 'mars', 3: 'mercury', 4: 'jupiter', 5: 'venus', 6: 'saturn',
 };
 
-// Calculate sunrise and sunset based on location
+// NOAA Solar Calculator Algorithm - High Precision Sunrise/Sunset
+// Based on: https://gml.noaa.gov/grad/solcalc/calcdetails.html
+
+const toRadians = (degrees: number) => degrees * Math.PI / 180;
+const toDegrees = (radians: number) => radians * 180 / Math.PI;
+
+// Calculate Julian Day from date
+const getJulianDay = (date: Date): number => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  
+  const A = Math.floor((14 - month) / 12);
+  const Y = year + 4800 - A;
+  const M = month + 12 * A - 3;
+  
+  return day + Math.floor((153 * M + 2) / 5) + 365 * Y + Math.floor(Y / 4) - Math.floor(Y / 100) + Math.floor(Y / 400) - 32045;
+};
+
+// Calculate Julian Century
+const getJulianCentury = (julianDay: number): number => {
+  return (julianDay - 2451545) / 36525;
+};
+
+// Calculate Geometric Mean Longitude of Sun (degrees)
+const getGeomMeanLongSun = (T: number): number => {
+  let L0 = 280.46646 + T * (36000.76983 + 0.0003032 * T);
+  while (L0 > 360) L0 -= 360;
+  while (L0 < 0) L0 += 360;
+  return L0;
+};
+
+// Calculate Geometric Mean Anomaly of Sun (degrees)
+const getGeomMeanAnomalySun = (T: number): number => {
+  return 357.52911 + T * (35999.05029 - 0.0001537 * T);
+};
+
+// Calculate Eccentricity of Earth's Orbit
+const getEccentricityEarthOrbit = (T: number): number => {
+  return 0.016708634 - T * (0.000042037 + 0.0000001267 * T);
+};
+
+// Calculate Sun's Equation of Center
+const getSunEqOfCenter = (T: number): number => {
+  const M = getGeomMeanAnomalySun(T);
+  const mrad = toRadians(M);
+  const sinm = Math.sin(mrad);
+  const sin2m = Math.sin(2 * mrad);
+  const sin3m = Math.sin(3 * mrad);
+  return sinm * (1.914602 - T * (0.004817 + 0.000014 * T)) + sin2m * (0.019993 - 0.000101 * T) + sin3m * 0.000289;
+};
+
+// Calculate Sun's True Longitude (degrees)
+const getSunTrueLong = (T: number): number => {
+  return getGeomMeanLongSun(T) + getSunEqOfCenter(T);
+};
+
+// Calculate Sun's Apparent Longitude (degrees)
+const getSunApparentLong = (T: number): number => {
+  const O = getSunTrueLong(T);
+  const omega = 125.04 - 1934.136 * T;
+  return O - 0.00569 - 0.00478 * Math.sin(toRadians(omega));
+};
+
+// Calculate Mean Obliquity of Ecliptic (degrees)
+const getMeanObliquityOfEcliptic = (T: number): number => {
+  const seconds = 21.448 - T * (46.8150 + T * (0.00059 - T * 0.001813));
+  return 23 + (26 + seconds / 60) / 60;
+};
+
+// Calculate Obliquity Correction (degrees)
+const getObliquityCorrection = (T: number): number => {
+  const e0 = getMeanObliquityOfEcliptic(T);
+  const omega = 125.04 - 1934.136 * T;
+  return e0 + 0.00256 * Math.cos(toRadians(omega));
+};
+
+// Calculate Sun's Declination (degrees)
+const getSunDeclination = (T: number): number => {
+  const e = getObliquityCorrection(T);
+  const lambda = getSunApparentLong(T);
+  const sint = Math.sin(toRadians(e)) * Math.sin(toRadians(lambda));
+  return toDegrees(Math.asin(sint));
+};
+
+// Calculate Equation of Time (minutes)
+const getEquationOfTime = (T: number): number => {
+  const epsilon = getObliquityCorrection(T);
+  const L0 = getGeomMeanLongSun(T);
+  const e = getEccentricityEarthOrbit(T);
+  const M = getGeomMeanAnomalySun(T);
+  
+  let y = Math.tan(toRadians(epsilon / 2));
+  y *= y;
+  
+  const sin2l0 = Math.sin(2 * toRadians(L0));
+  const sinm = Math.sin(toRadians(M));
+  const cos2l0 = Math.cos(2 * toRadians(L0));
+  const sin4l0 = Math.sin(4 * toRadians(L0));
+  const sin2m = Math.sin(2 * toRadians(M));
+  
+  const Etime = y * sin2l0 - 2 * e * sinm + 4 * e * y * sinm * cos2l0 - 0.5 * y * y * sin4l0 - 1.25 * e * e * sin2m;
+  return toDegrees(Etime) * 4; // in minutes
+};
+
+// Calculate Hour Angle for sunrise/sunset (degrees)
+const getHourAngleSunrise = (lat: number, solarDec: number, zenith: number): number => {
+  const latRad = toRadians(lat);
+  const sdRad = toRadians(solarDec);
+  const zenithRad = toRadians(zenith);
+  
+  const hourAngle = Math.acos(
+    (Math.cos(zenithRad) / (Math.cos(latRad) * Math.cos(sdRad))) - Math.tan(latRad) * Math.tan(sdRad)
+  );
+  
+  return toDegrees(hourAngle);
+};
+
+// Calculate sunrise and sunset based on location using NOAA algorithm
 const calculateSunTimes = (date: Date, latitude: number, longitude: number) => {
-  const dayOfYear = Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86400000);
-  const declination = -23.45 * Math.cos((360 / 365) * (dayOfYear + 10) * Math.PI / 180);
-  const latRad = latitude * Math.PI / 180;
-  const decRad = declination * Math.PI / 180;
+  // Official zenith for sunrise/sunset (90.833 degrees accounts for atmospheric refraction)
+  const ZENITH = 90.833;
   
-  let cosHourAngle = -Math.tan(latRad) * Math.tan(decRad);
-  cosHourAngle = Math.max(-1, Math.min(1, cosHourAngle));
+  const JD = getJulianDay(date);
+  const T = getJulianCentury(JD);
   
-  const hourAngle = Math.acos(cosHourAngle) * 180 / Math.PI;
-  const solarNoon = 12 - longitude / 15;
-  const sunriseUTC = solarNoon - hourAngle / 15;
-  const sunsetUTC = solarNoon + hourAngle / 15;
+  // Get equation of time and solar declination
+  const eqTime = getEquationOfTime(T);
+  const solarDec = getSunDeclination(T);
   
+  // Get timezone offset in hours
   const timezoneOffset = -date.getTimezoneOffset() / 60;
-  const sunriseLocal = sunriseUTC + timezoneOffset;
-  const sunsetLocal = sunsetUTC + timezoneOffset;
   
+  // Calculate hour angle for sunrise
+  let hourAngle: number;
+  try {
+    hourAngle = getHourAngleSunrise(latitude, solarDec, ZENITH);
+  } catch (e) {
+    // Sun never rises or sets at this location on this date (polar regions)
+    hourAngle = 90;
+  }
+  
+  // Calculate solar noon (in minutes from midnight, local time)
+  const solarNoonMinutes = 720 - 4 * longitude - eqTime + timezoneOffset * 60;
+  
+  // Calculate sunrise and sunset times (in minutes from midnight)
+  const sunriseMinutes = solarNoonMinutes - hourAngle * 4;
+  const sunsetMinutes = solarNoonMinutes + hourAngle * 4;
+  
+  // Convert to Date objects
   const sunrise = new Date(date);
-  sunrise.setHours(Math.floor(sunriseLocal), Math.round((sunriseLocal % 1) * 60), 0, 0);
+  sunrise.setHours(0, 0, 0, 0);
+  sunrise.setMinutes(Math.round(sunriseMinutes));
+  
+  const sunset = new Date(date);
+  sunset.setHours(0, 0, 0, 0);
+  sunset.setMinutes(Math.round(sunsetMinutes));
   
   const sunset = new Date(date);
   sunset.setHours(Math.floor(sunsetLocal), Math.round((sunsetLocal % 1) * 60), 0, 0);
