@@ -1256,10 +1256,10 @@ const PlanetaryHoursScreen = ({
             {/* Timer Section */}
             <View style={mainStyles.timerSection}>
               <View style={[mainStyles.timerCard, { backgroundColor: isLightBackground ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }]}>
-                <Text style={[mainStyles.timerLabel, { color: subTextColor }]}>Time until next hour</Text>
+                <Text style={[mainStyles.timerLabel, { color: subTextColor }]}>Timp până la următoarea oră</Text>
                 <Text style={[mainStyles.timerValue, { color: textColor }]}>{formatTimeRemaining(planetaryHour.timeUntilNext)}</Text>
                 <View style={mainStyles.nextPlanetRow}>
-                  <Text style={[mainStyles.nextLabel, { color: subTextColor }]}>Next:</Text>
+                  <Text style={[mainStyles.nextLabel, { color: subTextColor }]}>Următoarea:</Text>
                   <View style={[mainStyles.nextPlanetBadge, { backgroundColor: nextPlanetData.color }]}>
                     <Text style={mainStyles.nextPlanetSymbol}>{nextPlanetData.symbol}</Text>
                     <Text style={mainStyles.nextPlanetName}>{nextPlanetData.name}</Text>
