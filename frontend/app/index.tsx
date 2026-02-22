@@ -737,7 +737,7 @@ const LocationMenuModal = ({
       <View style={modalStyles.overlay}>
         <View style={modalStyles.container}>
           <View style={modalStyles.header}>
-            <Text style={modalStyles.title}>Saved Locations</Text>
+            <Text style={modalStyles.title}>Locații Salvate</Text>
             <TouchableOpacity onPress={onClose} style={modalStyles.closeButton}>
               <Ionicons name="close" size={24} color="#fff" />
             </TouchableOpacity>
@@ -747,7 +747,7 @@ const LocationMenuModal = ({
             {savedLocations.length === 0 ? (
               <View style={modalStyles.emptyState}>
                 <Ionicons name="location-outline" size={48} color="#666" />
-                <Text style={modalStyles.emptyText}>No saved locations yet</Text>
+                <Text style={modalStyles.emptyText}>Nicio locație salvată</Text>
               </View>
             ) : (
               savedLocations.map((loc, index) => {
@@ -787,7 +787,7 @@ const LocationMenuModal = ({
           
           <TouchableOpacity style={modalStyles.addButton} onPress={onAddNew}>
             <Ionicons name="add-circle-outline" size={24} color="#FFD700" />
-            <Text style={modalStyles.addButtonText}>Add New Location</Text>
+            <Text style={modalStyles.addButtonText}>Adaugă Locație Nouă</Text>
           </TouchableOpacity>
         </View>
       </View>
