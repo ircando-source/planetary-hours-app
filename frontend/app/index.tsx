@@ -980,7 +980,7 @@ const AddLocationScreen = ({
       <View style={addStyles.container}>
         <View style={addStyles.loadingContainer}>
           <ActivityIndicator size="large" color="#FFD700" />
-          <Text style={addStyles.loadingText}>Getting location...</Text>
+          <Text style={addStyles.loadingText}>Se obține locația...</Text>
         </View>
       </View>
     );
