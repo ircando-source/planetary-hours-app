@@ -1042,22 +1042,22 @@ const AddLocationScreen = ({
               <>
                 <TouchableOpacity style={addStyles.modeBackButton} onPress={() => setMode('menu')}>
                   <Ionicons name="arrow-back" size={20} color="#FFD700" />
-                  <Text style={addStyles.modeBackText}>Back</Text>
+                  <Text style={addStyles.modeBackText}>Înapoi</Text>
                 </TouchableOpacity>
 
                 <View style={addStyles.inputSection}>
                   <Ionicons name="search-outline" size={50} color="#FFD700" />
-                  <Text style={addStyles.inputTitle}>Search Location</Text>
+                  <Text style={addStyles.inputTitle}>Caută Locație</Text>
                   <TextInput
                     style={addStyles.textInput}
-                    placeholder="e.g., Galați, Romania"
+                    placeholder="ex: Galați, România"
                     placeholderTextColor="#888"
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                     autoFocus
                   />
                   <TouchableOpacity style={addStyles.submitButton} onPress={handleSearchLocation}>
-                    <Text style={addStyles.submitButtonText}>Search</Text>
+                    <Text style={addStyles.submitButtonText}>Caută</Text>
                   </TouchableOpacity>
                 </View>
               </>
@@ -1067,22 +1067,22 @@ const AddLocationScreen = ({
               <>
                 <TouchableOpacity style={addStyles.modeBackButton} onPress={() => setMode('menu')}>
                   <Ionicons name="arrow-back" size={20} color="#FFD700" />
-                  <Text style={addStyles.modeBackText}>Back</Text>
+                  <Text style={addStyles.modeBackText}>Înapoi</Text>
                 </TouchableOpacity>
 
                 <View style={addStyles.inputSection}>
                   <Ionicons name="keypad-outline" size={50} color="#FFD700" />
-                  <Text style={addStyles.inputTitle}>Enter Coordinates</Text>
+                  <Text style={addStyles.inputTitle}>Introdu Coordonate</Text>
                   <TextInput
                     style={addStyles.textInput}
-                    placeholder="Location name (e.g., Galați)"
+                    placeholder="Numele locației (ex: Galați)"
                     placeholderTextColor="#888"
                     value={locationName}
                     onChangeText={setLocationName}
                   />
                   <TextInput
                     style={addStyles.textInput}
-                    placeholder="Latitude (e.g., 45.4353)"
+                    placeholder="Latitudine (ex: 45.4353)"
                     placeholderTextColor="#888"
                     value={latitude}
                     onChangeText={setLatitude}
@@ -1090,14 +1090,14 @@ const AddLocationScreen = ({
                   />
                   <TextInput
                     style={addStyles.textInput}
-                    placeholder="Longitude (e.g., 28.0080)"
+                    placeholder="Longitudine (ex: 28.0080)"
                     placeholderTextColor="#888"
                     value={longitude}
                     onChangeText={setLongitude}
                     keyboardType="numeric"
                   />
                   <TouchableOpacity style={addStyles.submitButton} onPress={handleManualEntry}>
-                    <Text style={addStyles.submitButtonText}>Add Location</Text>
+                    <Text style={addStyles.submitButtonText}>Adaugă Locație</Text>
                   </TouchableOpacity>
                 </View>
               </>
