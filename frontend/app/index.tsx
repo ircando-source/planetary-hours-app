@@ -996,23 +996,23 @@ const AddLocationScreen = ({
             {/* Back Button */}
             <TouchableOpacity style={addStyles.backButton} onPress={onCancel}>
               <Ionicons name="arrow-back" size={24} color="#fff" />
-              <Text style={addStyles.backText}>Back to Locations</Text>
+              <Text style={addStyles.backText}>Înapoi la Locații</Text>
             </TouchableOpacity>
 
             {mode === 'menu' && (
               <>
                 <View style={addStyles.header}>
                   <Ionicons name="add-circle-outline" size={60} color="#FFD700" />
-                  <Text style={addStyles.title}>Add Location</Text>
-                  <Text style={addStyles.subtitle}>Choose how to add your location</Text>
+                  <Text style={addStyles.title}>Adaugă Locație</Text>
+                  <Text style={addStyles.subtitle}>Alege cum să adaugi locația</Text>
                 </View>
 
                 <View style={addStyles.menuContainer}>
                   <TouchableOpacity style={addStyles.menuButton} onPress={handleGPSLocation}>
                     <Ionicons name="locate-outline" size={28} color="#fff" />
                     <View style={addStyles.menuTextContainer}>
-                      <Text style={addStyles.menuButtonTitle}>Use GPS</Text>
-                      <Text style={addStyles.menuButtonSubtitle}>Detect current position</Text>
+                      <Text style={addStyles.menuButtonTitle}>Folosește GPS</Text>
+                      <Text style={addStyles.menuButtonSubtitle}>Detectează poziția curentă</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={20} color="#888" />
                   </TouchableOpacity>
@@ -1020,8 +1020,8 @@ const AddLocationScreen = ({
                   <TouchableOpacity style={addStyles.menuButton} onPress={() => setMode('search')}>
                     <Ionicons name="search-outline" size={28} color="#fff" />
                     <View style={addStyles.menuTextContainer}>
-                      <Text style={addStyles.menuButtonTitle}>Search City</Text>
-                      <Text style={addStyles.menuButtonSubtitle}>Find by name</Text>
+                      <Text style={addStyles.menuButtonTitle}>Caută Oraș</Text>
+                      <Text style={addStyles.menuButtonSubtitle}>Găsește după nume</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={20} color="#888" />
                   </TouchableOpacity>
@@ -1029,8 +1029,8 @@ const AddLocationScreen = ({
                   <TouchableOpacity style={addStyles.menuButton} onPress={() => setMode('manual')}>
                     <Ionicons name="keypad-outline" size={28} color="#fff" />
                     <View style={addStyles.menuTextContainer}>
-                      <Text style={addStyles.menuButtonTitle}>Enter Coordinates</Text>
-                      <Text style={addStyles.menuButtonSubtitle}>Input lat/long manually</Text>
+                      <Text style={addStyles.menuButtonTitle}>Introdu Coordonate</Text>
+                      <Text style={addStyles.menuButtonSubtitle}>Introduce lat/long manual</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={20} color="#888" />
                   </TouchableOpacity>
