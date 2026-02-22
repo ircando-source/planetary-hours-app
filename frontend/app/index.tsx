@@ -1427,12 +1427,12 @@ export default function PlanetaryHoursApp() {
 
   const handleDeleteLocation = async (location: LocationData) => {
     Alert.alert(
-      'Delete Location',
-      `Remove "${location.name}" from saved locations?`,
+      'Șterge Locația',
+      `Elimini "${location.name}" din locațiile salvate?`,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Anulează', style: 'cancel' },
         {
-          text: 'Delete',
+          text: 'Șterge',
           style: 'destructive',
           onPress: async () => {
             const newList = savedLocations.filter(
