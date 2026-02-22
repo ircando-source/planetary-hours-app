@@ -1215,7 +1215,7 @@ const PlanetaryHoursScreen = ({
             <View style={mainStyles.header}>
               <Text style={[mainStyles.timeText, { color: subTextColor }]}>{formatTime(currentTime)}</Text>
               <Text style={[mainStyles.dayNightText, { color: subTextColor }]}>
-                {planetaryHour.isDay ? 'Day Hours' : 'Night Hours'}
+                {planetaryHour.isDay ? 'Ore de Zi' : 'Ore de Noapte'}
               </Text>
               <View style={mainStyles.sunTimesRow}>
                 <View style={mainStyles.sunTimeItem}>
@@ -1238,7 +1238,7 @@ const PlanetaryHoursScreen = ({
               <Text style={[mainStyles.planetName, { color: textColor }]}>{currentPlanetData.name}</Text>
               <Text style={[mainStyles.vibrationText, { color: textColor }]}>{currentPlanetData.vibration}</Text>
               <Text style={[mainStyles.hourLabel, { color: subTextColor }]}>
-                Planetary Hour {planetaryHour.hourNumber} of {planetaryHour.isDay ? 'Day' : 'Night'}
+                Ora Planetară {planetaryHour.hourNumber} din {planetaryHour.isDay ? 'Zi' : 'Noapte'}
               </Text>
 
               <View style={[mainStyles.vibrationCard, { backgroundColor: isLightBackground ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }]}>
