@@ -914,7 +914,7 @@ const AddLocationScreen = ({
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission Denied', 'Location permission is required.');
+        Alert.alert('Permisiune Refuzată', 'Este necesară permisiunea pentru locație.');
         setLoading(false);
         return;
       }
@@ -932,14 +932,14 @@ const AddLocationScreen = ({
 
       onLocationAdded({ latitude, longitude, name });
     } catch (error) {
-      Alert.alert('Error', 'Failed to get GPS location.');
+      Alert.alert('Eroare', 'Nu s-a putut obține locația GPS.');
     }
     setLoading(false);
   };
 
   const handleSearchLocation = async () => {
     if (!searchQuery.trim()) {
-      Alert.alert('Error', 'Please enter a location name.');
+      Alert.alert('Eroare', 'Te rog introdu un nume de locație.');
       return;
     }
 
@@ -950,10 +950,10 @@ const AddLocationScreen = ({
         const { latitude, longitude } = results[0];
         onLocationAdded({ latitude, longitude, name: searchQuery.trim() });
       } else {
-        Alert.alert('Not Found', 'Location not found. Try coordinates instead.');
+        Alert.alert('Negăsit', 'Locația nu a fost găsită. Încearcă coordonatele.');
       }
     } catch (error) {
-      Alert.alert('Error', 'Search failed.');
+      Alert.alert('Eroare', 'Căutarea a eșuat.');
     }
     setLoading(false);
   };
@@ -963,11 +963,11 @@ const AddLocationScreen = ({
     const lon = parseFloat(longitude);
 
     if (isNaN(lat) || isNaN(lon)) {
-      Alert.alert('Error', 'Please enter valid coordinates.');
+      Alert.alert('Eroare', 'Te rog introdu coordonate valide.');
       return;
     }
     if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
-      Alert.alert('Error', 'Invalid coordinate range.');
+      Alert.alert('Eroare', 'Interval de coordonate invalid.');
       return;
     }
 
