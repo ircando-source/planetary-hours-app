@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "Planetary Hours",
-    "slug": "planetary-hours",
+    "name": "Ore Planetare",
+    "slug": "ore-planetare",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "planetary-hours",
+    "scheme": "ore-planetare",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Your location is used to calculate accurate sunrise and sunset times for planetary hours."
+        "NSLocationWhenInUseUsageDescription": "Locația ta este folosită pentru a calcula orele precise de răsărit și apus pentru orele planetare."
       }
     },
     "android": {
@@ -23,7 +23,8 @@
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "package": "com.oreplanetare.app"
     },
     "web": {
       "bundler": "metro",
@@ -44,7 +45,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Your location is used to calculate accurate sunrise and sunset times for planetary hours."
+          "locationAlwaysAndWhenInUsePermission": "Locația ta este folosită pentru a calcula orele precise de răsărit și apus pentru orele planetare."
         }
       ]
     ],
